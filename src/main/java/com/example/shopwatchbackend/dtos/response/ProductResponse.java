@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ProductResponse {
+
     @JsonProperty("product_id")
     private int productId;
 

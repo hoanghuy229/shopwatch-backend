@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.controllers;
 
-import com.example.shopwatchbackend.dtos.request.RoleDTO;
+import com.example.shopwatchbackend.dtos.request.RoleRequest;
 import com.example.shopwatchbackend.dtos.response.RoleResponse;
 import com.example.shopwatchbackend.services.interfaces.IRoleService;
 import jakarta.validation.Valid;
@@ -26,9 +26,9 @@ public class RoleController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> addRole(@Valid @RequestBody RoleDTO roleDTO) throws Exception {
+    public ResponseEntity<?> addRole(@Valid @RequestBody RoleRequest roleRequest) throws Exception {
         try{
-            String result = iRoleService.addRole(roleDTO);
+            String result = iRoleService.addRole(roleRequest);
             return ResponseEntity.ok().body(result);
         }
         catch (Exception e){

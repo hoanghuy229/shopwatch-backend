@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest request,
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
-        try{
+
             String authHeader = request.getHeader("Authorization");
             String token = null;
             String phoneNumber = null;
@@ -46,10 +46,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request,response);
-        }
-        catch (Exception e){
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"ccccc");
-        }
     }
 
 }

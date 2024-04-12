@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.controllers;
 
-import com.example.shopwatchbackend.dtos.request.PaymentDTO;
+import com.example.shopwatchbackend.dtos.request.PaymentRequest;
 import com.example.shopwatchbackend.dtos.response.PaymentResponse;
 import com.example.shopwatchbackend.services.interfaces.IPaymentService;
 import jakarta.validation.Valid;
@@ -25,9 +25,9 @@ public class PaymentController {
     }
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> addPayment(@Valid @RequestBody PaymentDTO paymentDTO) throws Exception {
+    public ResponseEntity<?> addPayment(@Valid @RequestBody PaymentRequest paymentRequest) throws Exception {
         try{
-            String result = iPaymentService.createPayment(paymentDTO);
+            String result = iPaymentService.createPayment(paymentRequest);
             return ResponseEntity.ok(result);
         }
         catch (Exception e){
@@ -36,9 +36,9 @@ public class PaymentController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updatePayment(@PathVariable int id,@Valid @RequestBody PaymentDTO paymentDTO) throws Exception {
+    public ResponseEntity<?> updatePayment(@PathVariable int id,@Valid @RequestBody PaymentRequest paymentRequest) throws Exception {
         try{
-            String rsult = iPaymentService.updatePayment(id,paymentDTO);
+            String rsult = iPaymentService.updatePayment(id, paymentRequest);
             return ResponseEntity.ok(rsult);
         }
         catch (Exception e){

@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.services.implementations;
 
-import com.example.shopwatchbackend.dtos.request.OrderDetailDTO;
+import com.example.shopwatchbackend.dtos.request.OrderDetailRequest;
 import com.example.shopwatchbackend.models.Order;
 import com.example.shopwatchbackend.models.OrderDetail;
 import com.example.shopwatchbackend.models.Product;
@@ -34,11 +34,11 @@ public class OrderDetailService implements IOrderDetailService {
 
     @Override
     @Transactional
-    public String createOrderDetail(int id,OrderDetailDTO orderDetailDTO) throws Exception {
-        Product product = productRepository.findById(orderDetailDTO.getProductId()).orElseThrow(() -> new Exception("cannot find product"));
+    public String createOrderDetail(int id, OrderDetailRequest orderDetailRequest) throws Exception {
+        Product product = productRepository.findById(orderDetailRequest.getProductId()).orElseThrow(() -> new Exception("cannot find product"));
         Order order =  orderRepository.findById(id).orElseThrow(() -> new Exception("cannot find order"));
         OrderDetail orderDetail = new OrderDetail();
-        modelMapper.map(orderDetailDTO,orderDetail);
+        modelMapper.map(orderDetailRequest,orderDetail);
         orderDetail.setProduct(product);
         orderDetail.setOrder(order);
         orderDetailRepository.save(orderDetail);
@@ -47,7 +47,7 @@ public class OrderDetailService implements IOrderDetailService {
 
     @Override
     @Transactional
-    public String updateOrderDetail(int id, OrderDetailDTO orderDetailDTO) {
+    public String updateOrderDetail(int id, OrderDetailRequest orderDetailRequest) {
         return null;
     }
 }

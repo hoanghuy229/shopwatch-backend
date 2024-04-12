@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.controllers;
 
-import com.example.shopwatchbackend.dtos.request.OrderDTO;
+import com.example.shopwatchbackend.dtos.request.OrderRequest;
 import com.example.shopwatchbackend.models.Customer;
 import com.example.shopwatchbackend.dtos.response.OrderResponse;
 import com.example.shopwatchbackend.services.interfaces.ICustomerService;
@@ -29,16 +29,13 @@ public class OrderController {
         return ResponseEntity.ok("get all");
     }
 
-    @GetMapping("/customer/{id}")
+    @GetMapping("/customer")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> getOrdersByCustomerId(@PathVariable("id") int id,@RequestHeader("Authorization") String token){
+    public ResponseEntity<?> getOrdersByCustomerId(@RequestHeader("Authorization") String token){
         try{
             String extractToken = token.substring(7);
             Customer customer = iCustomerService.getUserDetailFromToken(extractToken);
-            if(customer.getCustomerId() != id){
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-            List<OrderResponse> orderResponses = iOrderService.getAllByCustomerId(id);
+            List<OrderResponse> orderResponses = iOrderService.getAllByCustomerId(customer.getCustomerId());
             return ResponseEntity.ok().body(orderResponses);
         }
         catch (Exception e){
@@ -48,9 +45,9 @@ public class OrderController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> addOrder(@Valid @RequestBody OrderDTO orderDTO) throws Exception {
+    public ResponseEntity<?> addOrder(@Valid @RequestBody OrderRequest orderRequest) throws Exception {
         try{
-            String result = iOrderService.createOrder(orderDTO);
+            String result = iOrderService.createOrder(orderRequest);
             return ResponseEntity.ok(result);
         }
         catch (Exception e){
@@ -59,9 +56,9 @@ public class OrderController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateOrder(@PathVariable("id") int id,OrderDTO orderDTO) throws Exception {
+    public ResponseEntity<?> updateOrder(@PathVariable("id") int id, OrderRequest orderRequest) throws Exception {
 
-        String result = iOrderService.updateOrder(id,orderDTO);
+        String result = iOrderService.updateOrder(id, orderRequest);
 
         return ResponseEntity.ok(result);
     }

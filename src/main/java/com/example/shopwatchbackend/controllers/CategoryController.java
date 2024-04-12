@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.controllers;
 
-import com.example.shopwatchbackend.dtos.request.CategoryDTO;
+import com.example.shopwatchbackend.dtos.request.CategoryRequest;
 import com.example.shopwatchbackend.dtos.response.CategoryResponse;
 import com.example.shopwatchbackend.services.interfaces.ICategoryService;
 import jakarta.validation.Valid;
@@ -36,9 +36,9 @@ public class CategoryController {
     }
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryDTO categoryDTO) throws Exception {
+    public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryRequest categoryRequest) throws Exception {
         try{
-            String result = iCategoryService.createCategory(categoryDTO);
+            String result = iCategoryService.createCategory(categoryRequest);
             return ResponseEntity.ok(result);
         }
         catch (Exception e){
@@ -47,9 +47,9 @@ public class CategoryController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateCategory(@PathVariable int id,@Valid @RequestBody CategoryDTO categoryDTO) throws Exception {
+    public ResponseEntity<?> updateCategory(@PathVariable int id,@Valid @RequestBody CategoryRequest categoryRequest) throws Exception {
        try{
-           String result = iCategoryService.updateCategory(id,categoryDTO);
+           String result = iCategoryService.updateCategory(id, categoryRequest);
            return ResponseEntity.ok(result);
        }
        catch (Exception e){

@@ -21,4 +21,6 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<Product> findAllByProductIdIn(List<Integer> ids);
 
 
+    @Query("SELECT p FROM Product p ORDER BY p.productId DESC LIMIT 4")
+    List<Product> get6Products();
 }

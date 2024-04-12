@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.services.implementations;
 
-import com.example.shopwatchbackend.dtos.request.CategoryDTO;
+import com.example.shopwatchbackend.dtos.request.CategoryRequest;
 import com.example.shopwatchbackend.models.Category;
 import com.example.shopwatchbackend.repositories.CategoryRepository;
 import com.example.shopwatchbackend.dtos.response.CategoryResponse;
@@ -34,25 +34,25 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
-    public String createCategory(CategoryDTO categoryDTO) throws Exception {
-        Category existedCategory = categoryRepository.findByName(categoryDTO.getName());
+    public String createCategory(CategoryRequest categoryRequest) throws Exception {
+        Category existedCategory = categoryRepository.findByName(categoryRequest.getName());
         if(existedCategory != null){
             throw new Exception("CATEGORY NAME EXISTS!!!");
         }
-        Category newCategory = Category.builder().name(categoryDTO.getName()).build();
+        Category newCategory = Category.builder().name(categoryRequest.getName()).build();
         categoryRepository.save(newCategory);
         return "add cate success";
     }
 
     @Override
     @Transactional
-    public String updateCategory(int id, CategoryDTO categoryDTO) throws Exception {
+    public String updateCategory(int id, CategoryRequest categoryRequest) throws Exception {
         Category existCategory = categoryRepository.findById(id).orElseThrow(() -> new Exception("not found"));
-        Category checkName = categoryRepository.findByName(categoryDTO.getName());
+        Category checkName = categoryRepository.findByName(categoryRequest.getName());
         if(checkName != null){
             throw new Exception("CATEGORY NAME EXISTS!!!");
         }
-        existCategory.setName(categoryDTO.getName());
+        existCategory.setName(categoryRequest.getName());
         categoryRepository.save(existCategory);
         return "update cate success";
     }

@@ -1,7 +1,7 @@
 package com.example.shopwatchbackend.controllers;
 
-import com.example.shopwatchbackend.dtos.request.CustomerDTO;
-import com.example.shopwatchbackend.dtos.request.LoginDTO;
+import com.example.shopwatchbackend.dtos.request.CustomerRequest;
+import com.example.shopwatchbackend.dtos.request.LoginRequest;
 import com.example.shopwatchbackend.models.Customer;
 import com.example.shopwatchbackend.dtos.response.CustomerResponse;
 import com.example.shopwatchbackend.dtos.response.CustomerResponseList;
@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("${api.prefix}/customers")
@@ -41,9 +42,9 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) throws Exception {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
        try{
-           String token = iCustomerService.login(loginDTO);
+           String token = iCustomerService.login(loginRequest);
            return ResponseEntity.ok(token);
        }
        catch (Exception e){
@@ -65,9 +66,9 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> createAccount(@Valid @RequestBody CustomerDTO customerDTO) throws Exception {
+    public ResponseEntity<?> createAccount(@Valid @RequestBody CustomerRequest customerRequest) throws Exception {
         try{
-            String result = iCustomerService.register(customerDTO);
+            String result = iCustomerService.register(customerRequest);
             return ResponseEntity.ok(result);
         }
         catch (Exception e){
@@ -77,7 +78,7 @@ public class CustomerController {
     @PutMapping("/details/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> updateCustomer(@PathVariable int id,
-                                            CustomerDTO customerDTO,
+                                            @Valid @RequestBody CustomerRequest customerRequest,
                                             @RequestHeader("Authorization") String token){
         try{
             String extractToken = token.substring(7);
@@ -85,7 +86,7 @@ public class CustomerController {
             if(customer.getCustomerId() != id){
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
-            String result = iCustomerService.updateCustomerDetail(id,customerDTO);
+            String result = iCustomerService.updateCustomerDetail(id, customerRequest);
             return ResponseEntity.ok().body(result);
         }
         catch (Exception e){

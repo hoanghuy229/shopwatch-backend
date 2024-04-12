@@ -26,9 +26,6 @@ public class CustomerResponse {
     @JsonProperty("password")
     private String password;
 
-    @JsonProperty("avatar")
-    private String avatar;
-
     @JsonProperty("phone_number")
     private String phoneNumber;
 

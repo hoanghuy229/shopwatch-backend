@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryDTO {
+public class CategoryRequest {
 
     @JsonProperty("name")
     @NotBlank(message = "Category's name cannot be empty")

@@ -37,9 +37,6 @@ public class Customer implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "avatar")
-    private String avatar;
-
     @Column(name = "phone")
     private String phoneNumber;
 

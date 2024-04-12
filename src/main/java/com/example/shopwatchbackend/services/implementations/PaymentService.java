@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.services.implementations;
 
-import com.example.shopwatchbackend.dtos.request.PaymentDTO;
+import com.example.shopwatchbackend.dtos.request.PaymentRequest;
 import com.example.shopwatchbackend.models.Payment;
 import com.example.shopwatchbackend.repositories.PaymentRepository;
 import com.example.shopwatchbackend.dtos.response.PaymentResponse;
@@ -27,23 +27,23 @@ public class PaymentService implements IPaymentService {
 
     @Override
     @Transactional
-    public String createPayment(PaymentDTO paymentDTO) throws Exception {
-        Payment exist = paymentRepository.findByPaymentMethod(paymentDTO.getPaymentMethod());
+    public String createPayment(PaymentRequest paymentRequest) throws Exception {
+        Payment exist = paymentRepository.findByPaymentMethod(paymentRequest.getPaymentMethod());
         if(exist != null){
             throw new Exception("existed!!!");
         }
-        Payment newPayment = Payment.builder().paymentMethod(paymentDTO.getPaymentMethod()).amount(paymentDTO.getAmount()).build();
+        Payment newPayment = Payment.builder().paymentMethod(paymentRequest.getPaymentMethod()).amount(paymentRequest.getAmount()).build();
         paymentRepository.save(newPayment);
         return "create success";
     }
 
     @Override
     @Transactional
-    public String updatePayment(int id, PaymentDTO paymentDTO) throws Exception {
+    public String updatePayment(int id, PaymentRequest paymentRequest) throws Exception {
         Payment payment = paymentRepository.findById(id).orElseThrow(() -> new Exception("cannot find"));
 
-        payment.setPaymentMethod(paymentDTO.getPaymentMethod());
-        payment.setAmount(paymentDTO.getAmount());
+        payment.setPaymentMethod(paymentRequest.getPaymentMethod());
+        payment.setAmount(paymentRequest.getAmount());
         paymentRepository.save(payment);
         return "update success";
     }

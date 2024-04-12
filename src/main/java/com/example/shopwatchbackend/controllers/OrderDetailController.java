@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.controllers;
 
-import com.example.shopwatchbackend.dtos.request.OrderDetailDTO;
+import com.example.shopwatchbackend.dtos.request.OrderDetailRequest;
 import com.example.shopwatchbackend.dtos.response.OrderDetailResponse;
 import com.example.shopwatchbackend.services.interfaces.IOrderDetailService;
 import jakarta.validation.Valid;
@@ -30,9 +30,9 @@ public class OrderDetailController {
     }
     @PostMapping("/order/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public ResponseEntity<?> addOrderDetail(@PathVariable("id") int id,@Valid @RequestBody OrderDetailDTO orderDetailDTO) throws Exception {
+    public ResponseEntity<?> addOrderDetail(@PathVariable("id") int id,@Valid @RequestBody OrderDetailRequest orderDetailRequest) throws Exception {
         try{
-            String result = iOrderDetailService.createOrderDetail(id,orderDetailDTO);
+            String result = iOrderDetailService.createOrderDetail(id, orderDetailRequest);
             return ResponseEntity.ok().body(result);
         }
         catch (Exception e){
@@ -41,8 +41,8 @@ public class OrderDetailController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public ResponseEntity<?> updateOrderDetail(@PathVariable int id, @Valid @RequestBody OrderDetailDTO orderDetailDTO){
-        String result = iOrderDetailService.updateOrderDetail(id,orderDetailDTO);
+    public ResponseEntity<?> updateOrderDetail(@PathVariable int id, @Valid @RequestBody OrderDetailRequest orderDetailRequest){
+        String result = iOrderDetailService.updateOrderDetail(id, orderDetailRequest);
         return ResponseEntity.ok().body(result);
     }
     @DeleteMapping("/{id}")

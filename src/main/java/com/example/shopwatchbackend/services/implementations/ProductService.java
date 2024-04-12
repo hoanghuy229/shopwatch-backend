@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.services.implementations;
 
-import com.example.shopwatchbackend.dtos.request.ProductDTO;
+import com.example.shopwatchbackend.dtos.request.ProductRequest;
 import com.example.shopwatchbackend.models.Category;
 import com.example.shopwatchbackend.models.Product;
 import com.example.shopwatchbackend.repositories.CategoryRepository;
@@ -47,15 +47,15 @@ public class ProductService implements IProductService {
 
     @Override
     @Transactional
-    public String createProduct(ProductDTO productDTO) throws Exception {
-        Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new Exception("cannot find"));
+    public String createProduct(ProductRequest productRequest) throws Exception {
+        Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new Exception("cannot find"));
         Product product = Product
                 .builder()
-                .name(productDTO.getName())
-                .image(productDTO.getImage())
-                .price(productDTO.getPrice())
-                .description(productDTO.getDescription())
-                .quantity(productDTO.getQuantity())
+                .name(productRequest.getName())
+                .image(productRequest.getImage())
+                .price(productRequest.getPrice())
+                .description(productRequest.getDescription())
+                .quantity(productRequest.getQuantity())
                 .category(category)
                 .build();
         productRepository.save(product);
@@ -64,15 +64,15 @@ public class ProductService implements IProductService {
 
     @Override
     @Transactional
-    public String updateProduct(int id, ProductDTO productDTO) throws Exception {
+    public String updateProduct(int id, ProductRequest productRequest) throws Exception {
         Product existProduct = productRepository.findById(id).orElseThrow(() -> new Exception("cannot find"));
-        Category category = categoryRepository.findById(productDTO.getCategoryId()).orElseThrow(() -> new Exception("cannot find cate"));
+        Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new Exception("cannot find cate"));
         existProduct.setCategory(category);
-        existProduct.setName(productDTO.getName());
-        existProduct.setPrice(productDTO.getPrice());
-        existProduct.setDescription(productDTO.getDescription());
-        existProduct.setQuantity(productDTO.getQuantity());
-        existProduct.setImage(productDTO.getImage());
+        existProduct.setName(productRequest.getName());
+        existProduct.setPrice(productRequest.getPrice());
+        existProduct.setDescription(productRequest.getDescription());
+        existProduct.setQuantity(productRequest.getQuantity());
+        existProduct.setImage(productRequest.getImage());
 
         productRepository.save(existProduct);
         return "update success";
@@ -89,5 +89,19 @@ public class ProductService implements IProductService {
     public List<ProductResponse> getByIds(List<Integer> productIds) {
         List<Product> productList = productRepository.findAllByProductIdIn(productIds);
         return productList.stream().map(product -> modelMapper.map(product,ProductResponse.class)).toList();
+    }
+
+    @Override
+    public List<ProductResponse> getPopularProduct() {
+        List<Product> productList = productRepository.get6Products();
+        return productList.stream().map(product -> modelMapper.map(product,ProductResponse.class)).toList();
+    }
+
+    @Override
+    public String saveImageProduct(int id, String fileName) throws Exception {
+        Product product = productRepository.findById(id).orElseThrow(() -> new Exception("cannot find"));
+        product.setImage(fileName);
+        productRepository.save(product);
+        return "success";
     }
 }

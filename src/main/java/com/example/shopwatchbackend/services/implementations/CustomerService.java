@@ -1,8 +1,8 @@
 package com.example.shopwatchbackend.services.implementations;
 
 import com.example.shopwatchbackend.component.JwtUtils;
-import com.example.shopwatchbackend.dtos.request.CustomerDTO;
-import com.example.shopwatchbackend.dtos.request.LoginDTO;
+import com.example.shopwatchbackend.dtos.request.CustomerRequest;
+import com.example.shopwatchbackend.dtos.request.LoginRequest;
 import com.example.shopwatchbackend.models.Customer;
 import com.example.shopwatchbackend.models.Role;
 import com.example.shopwatchbackend.repositories.CustomerRepository;
@@ -38,33 +38,32 @@ public class CustomerService implements ICustomerService {
 
     @Override
     @Transactional
-    public String register(CustomerDTO customerDTO) throws Exception {
-        boolean exist = customerRepository.existsByPhoneNumber(customerDTO.getPhoneNumber());
+    public String register(CustomerRequest customerRequest) throws Exception {
+        boolean exist = customerRepository.existsByPhoneNumber(customerRequest.getPhoneNumber());
         if(exist){
             throw new Exception("customer exists");
         }
         Customer customer = new Customer();
-        modelMapper.map(customerDTO,customer);
+        modelMapper.map(customerRequest,customer);
         Role role = roleRepository.findById(2).orElseThrow(() -> new Exception("cannot find role"));
         customer.setRole(role);
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
-        customer.setAvatar("C:\\Users\\Admin\\OneDrive\\Máy tính\\wweb\\imgs\\user.jpg");
         customerRepository.save(customer);
         return "register success";
     }
 
     @Override
-    public String login(LoginDTO loginDTO) throws Exception {
-        Optional<Customer> customer = customerRepository.findByPhoneNumber(loginDTO.getPhoneNumber());
+    public String login(LoginRequest loginRequest) throws Exception {
+        Optional<Customer> customer = customerRepository.findByPhoneNumber(loginRequest.getPhoneNumber());
         if(customer.isEmpty()){
             throw new Exception("user not found");
         }
         Customer exist = customer.get();
-        if(!passwordEncoder.matches(loginDTO.getPassword(),exist.getPassword())){
+        if(!passwordEncoder.matches(loginRequest.getPassword(),exist.getPassword())){
             throw new Exception("password not match!!!");
         }
 
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(loginDTO.getPhoneNumber(),loginDTO.getPassword(),exist.getAuthorities());
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(loginRequest.getPhoneNumber(), loginRequest.getPassword(),exist.getAuthorities());
         authenticationManager.authenticate(auth);
         return jwtUtils.generateToken(exist);
     }
@@ -86,21 +85,22 @@ public class CustomerService implements ICustomerService {
 
     @Override
     @Transactional
-    public String updateCustomerDetail(int id, CustomerDTO customerDTO) throws Exception {
+    public String updateCustomerDetail(int id, CustomerRequest customerRequest) throws Exception {
         Customer existCustomer = customerRepository.findById(id).orElseThrow(() -> new Exception("cannot find user"));
-        if(customerDTO.getFirstName() != null){
-            existCustomer.setFirstName(customerDTO.getFirstName());
+        if(customerRequest.getFirstName() != null){
+            existCustomer.setFirstName(customerRequest.getFirstName());
         }
-        if(customerDTO.getLastName() != null){
-            existCustomer.setLastName(customerDTO.getLastName());
+        if(customerRequest.getLastName() != null){
+            existCustomer.setLastName(customerRequest.getLastName());
         }
-        if(customerDTO.getEmail() != null){
-            existCustomer.setEmail(customerDTO.getEmail());
+        if(customerRequest.getEmail() != null){
+            existCustomer.setEmail(customerRequest.getEmail());
         }
-        if(customerDTO.getPassword() != null){
-            existCustomer.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
+        if(customerRequest.getPassword() != null){
+            existCustomer.setPassword(passwordEncoder.encode(customerRequest.getPassword()));
         }
         customerRepository.save(existCustomer);
         return "update account success";
     }
+
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDTO {
+public class OrderRequest {
 
     @JsonProperty("total_price")
     @Min(value = 0,message = "must >=0")
@@ -30,5 +30,5 @@ public class OrderDTO {
     private int paymentId;
 
     @JsonProperty("order_details")
-    private List<OrderDetailDTO> orderDetailDTOList;
+    private List<OrderDetailRequest> orderDetailRequestList;
 }

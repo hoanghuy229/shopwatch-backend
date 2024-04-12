@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerDTO {
+public class CustomerRequest {
 
     @JsonProperty("first_name")
     @NotBlank(message = "cannot be empty")

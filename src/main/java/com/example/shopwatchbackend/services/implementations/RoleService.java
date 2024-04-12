@@ -1,6 +1,6 @@
 package com.example.shopwatchbackend.services.implementations;
 
-import com.example.shopwatchbackend.dtos.request.RoleDTO;
+import com.example.shopwatchbackend.dtos.request.RoleRequest;
 import com.example.shopwatchbackend.models.Role;
 import com.example.shopwatchbackend.repositories.RoleRepository;
 import com.example.shopwatchbackend.dtos.response.RoleResponse;
@@ -27,12 +27,12 @@ public class RoleService implements IRoleService {
 
     @Override
     @Transactional
-    public String addRole(RoleDTO roleDTO) throws Exception {
-        boolean exist = roleRepository.existsByRoleName(roleDTO.getRoleName());
+    public String addRole(RoleRequest roleRequest) throws Exception {
+        boolean exist = roleRepository.existsByRoleName(roleRequest.getRoleName());
         if(exist){
             throw new Exception("role exist");
         }
-        Role role = Role.builder().roleName(roleDTO.getRoleName()).build();
+        Role role = Role.builder().roleName(roleRequest.getRoleName()).build();
         roleRepository.save(role);
         return "add success";
     }

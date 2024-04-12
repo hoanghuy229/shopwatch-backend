@@ -1,7 +1,7 @@
 package com.example.shopwatchbackend.services.implementations;
 
-import com.example.shopwatchbackend.dtos.request.OrderDTO;
-import com.example.shopwatchbackend.dtos.request.OrderDetailDTO;
+import com.example.shopwatchbackend.dtos.request.OrderRequest;
+import com.example.shopwatchbackend.dtos.request.OrderDetailRequest;
 import com.example.shopwatchbackend.models.*;
 import com.example.shopwatchbackend.repositories.*;
 import com.example.shopwatchbackend.dtos.response.OrderDetailResponse;
@@ -28,24 +28,24 @@ public class OrderService implements IOrderService {
 
     @Override
     @Transactional
-    public String createOrder(OrderDTO orderDTO) throws Exception {
-        Customer exist = customerRepository.findById(orderDTO.getCustomerId()).orElseThrow(() -> new Exception("cannot find user"));
-        Payment payment = paymentRepository.findById(orderDTO.getPaymentId()).orElseThrow(() -> new Exception("cannot find payment"));
+    public String createOrder(OrderRequest orderRequest) throws Exception {
+        Customer exist = customerRepository.findById(orderRequest.getCustomerId()).orElseThrow(() -> new Exception("cannot find user"));
+        Payment payment = paymentRepository.findById(orderRequest.getPaymentId()).orElseThrow(() -> new Exception("cannot find payment"));
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
         order.setCustomer(exist);
         order.setPayment(payment);
-        order.setTotalPrice(orderDTO.getTotalPrice());
+        order.setTotalPrice(orderRequest.getTotalPrice());
 
         List<OrderDetail> orderDetailList = new ArrayList<>();
-        for(OrderDetailDTO orderDetailDTO : orderDTO.getOrderDetailDTOList()){
+        for(OrderDetailRequest orderDetailRequest : orderRequest.getOrderDetailRequestList()){
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrder(order); // Đặt orderId cho OrderDetail
-            orderDetail.setQuantity(orderDetailDTO.getQuantity());
-            orderDetail.setPrice(orderDetailDTO.getPrice()); // Thêm giá vào OrderDetail
-            Product product = productRepository.findById(orderDetailDTO.getProductId()).orElseThrow(() -> new Exception("cannot find product"));
+            orderDetail.setQuantity(orderDetailRequest.getQuantity());
+            orderDetail.setPrice(orderDetailRequest.getPrice()); // Thêm giá vào OrderDetail
+            Product product = productRepository.findById(orderDetailRequest.getProductId()).orElseThrow(() -> new Exception("cannot find product"));
             orderDetail.setProduct(product);
-            product.setQuantity(product.getQuantity() - orderDetailDTO.getQuantity());
+            product.setQuantity(product.getQuantity() - orderDetailRequest.getQuantity());
             productRepository.save(product);
             orderDetailList.add(orderDetail);
         }
@@ -57,9 +57,9 @@ public class OrderService implements IOrderService {
 
     @Override
     @Transactional
-    public String updateOrder(int id, OrderDTO orderDTO) throws Exception {
+    public String updateOrder(int id, OrderRequest orderRequest) throws Exception {
         Order order = orderRepository.findById(id).orElseThrow(() -> new Exception("cannot find order"));
-        modelMapper.map(orderDTO,order);
+        modelMapper.map(orderRequest,order);
         orderRepository.save(order);
         return "update success";
     }

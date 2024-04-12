@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDetailDTO {
+public class OrderDetailRequest {
 
     @JsonProperty("quantity")
     @Size(min = 1,message = "must >=1")

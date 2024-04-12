@@ -10,12 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentDTO {
+public class LoginRequest {
 
-    @JsonProperty("payment_method")
-    private String paymentMethod;
+    @JsonProperty("phone_number")
+    private String phoneNumber;
 
-    @JsonProperty("amount")
-    private Double amount;
-
+    @JsonProperty("password")
+    private String password;
 }
