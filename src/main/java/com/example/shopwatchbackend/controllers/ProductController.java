@@ -40,7 +40,7 @@ public class ProductController {
             @RequestParam(defaultValue = "",name = "keyword") String keyword,
             @RequestParam(defaultValue = "0",name = "category_id") int categoryId,
             @RequestParam(defaultValue = "0",name = "page") int page,
-            @RequestParam(defaultValue = "12",name = "limit") int limit,
+            @RequestParam(defaultValue = "4",name = "limit") int limit,
             @RequestParam(defaultValue = "0", name = "min_price") Double minPrice,
             @RequestParam(defaultValue = "0", name = "max_price") Double maxPrice
     ){
